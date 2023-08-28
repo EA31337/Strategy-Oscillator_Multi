@@ -1,18 +1,19 @@
 /**
  * @file
- * Implements Oscillator_Multi strategy based on the Oscillator_Multi indicator.
+ * Implements Oscillator_Multi strategy based on the Oscillator Multi indicator.
  */
 
 enum ENUM_STG_OSCILLATOR_MULTI_TYPE {
   STG_OSCILLATOR_MULTI_TYPE_0_NONE = 0,  // (None)
   STG_OSCILLATOR_MULTI_TYPE_ADX,         // ADX
   STG_OSCILLATOR_MULTI_TYPE_ADXW,        // ADXW
+  STG_OSCILLATOR_MULTI_TYPE_GATOR,       // Gator
 };
 
 // User input params.
-INPUT_GROUP("Oscillator_Multi strategy: main strategy params");
+INPUT_GROUP("Oscillator Multi strategy: main strategy params");
 INPUT ENUM_STG_OSCILLATOR_MULTI_TYPE Oscillator_Multi_Type = STG_OSCILLATOR_MULTI_TYPE_ADX;  // Oscillator type
-INPUT_GROUP("Oscillator_Multi strategy: strategy params");
+INPUT_GROUP("Oscillator Multi strategy: strategy params");
 INPUT float Oscillator_Multi_LotSize = 0;                // Lot size
 INPUT int Oscillator_Multi_SignalOpenMethod = 6;         // Signal open method
 INPUT float Oscillator_Multi_SignalOpenLevel = 0;        // Signal open level
@@ -40,6 +41,16 @@ INPUT int Oscillator_Multi_Indi_ADXW_Period = 16;                               
 INPUT ENUM_APPLIED_PRICE Oscillator_Multi_Indi_ADXW_AppliedPrice = PRICE_TYPICAL;    // Applied price
 INPUT int Oscillator_Multi_Indi_ADXW_Shift = 0;                                      // Shift
 INPUT ENUM_IDATA_SOURCE_TYPE Oscillator_Multi_Indi_ADXW_SourceType = IDATA_BUILTIN;  // Source type
+INPUT_GROUP("Oscillator strategy: Gator indicator params");
+INPUT int Oscillator_Indi_Gator_Period_Jaw = 30;                            // Jaw Period
+INPUT int Oscillator_Indi_Gator_Period_Teeth = 14;                          // Teeth Period
+INPUT int Oscillator_Indi_Gator_Period_Lips = 6;                            // Lips Period
+INPUT int Oscillator_Indi_Gator_Shift_Jaw = 2;                              // Jaw Shift
+INPUT int Oscillator_Indi_Gator_Shift_Teeth = 2;                            // Teeth Shift
+INPUT int Oscillator_Indi_Gator_Shift_Lips = 4;                             // Lips Shift
+INPUT ENUM_MA_METHOD Oscillator_Indi_Gator_MA_Method = (ENUM_MA_METHOD)1;   // MA Method
+INPUT ENUM_APPLIED_PRICE Oscillator_Indi_Gator_Applied_Price = PRICE_OPEN;  // Applied Price
+INPUT int Oscillator_Indi_Gator_Shift = 0;                                  // Shift
 
 // Structs.
 
@@ -108,6 +119,10 @@ class Stg_Oscillator_Multi : public Strategy {
         _result &= dynamic_cast<Indi_ADXW *>(_indi).GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift) &&
                    dynamic_cast<Indi_ADXW *>(_indi).GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift + 1);
         break;
+      case STG_OSCILLATOR_MULTI_TYPE_GATOR:
+        _result &= dynamic_cast<Indi_Gator *>(_indi).GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift) &&
+                   dynamic_cast<Indi_Gator *>(_indi).GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift + 1);
+        break;
       default:
         break;
     }
@@ -136,6 +151,17 @@ class Stg_Oscillator_Multi : public Strategy {
         _adxw_params.SetDataSourceType(::Oscillator_Multi_Indi_ADXW_SourceType);
         _adxw_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
         SetIndicator(new Indi_ADXW(_adxw_params), ::Oscillator_Multi_Type);
+        break;
+      }
+      case STG_OSCILLATOR_MULTI_TYPE_GATOR:  // Gator
+      {
+        IndiGatorParams _indi_params(::Oscillator_Indi_Gator_Period_Jaw, ::Oscillator_Indi_Gator_Shift_Jaw,
+                                     ::Oscillator_Indi_Gator_Period_Teeth, ::Oscillator_Indi_Gator_Shift_Teeth,
+                                     ::Oscillator_Indi_Gator_Period_Lips, ::Oscillator_Indi_Gator_Shift_Lips,
+                                     ::Oscillator_Indi_Gator_MA_Method, ::Oscillator_Indi_Gator_Applied_Price,
+                                     ::Oscillator_Indi_Gator_Shift);
+        _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
+        SetIndicator(new Indi_Gator(_indi_params), ::Oscillator_Multi_Type);
         break;
       }
       case STG_OSCILLATOR_MULTI_TYPE_0_NONE:  // (None)
