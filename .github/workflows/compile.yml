@@ -5,15 +5,17 @@ name: Compile
 on:
   pull_request:
     branches:
-      - 'master'
       - '*dev*'
+      - 'main'
+      - 'master'
     paths-ignore:
       - '*.md'
       - '.git*'
   push:
     branches:
-      - 'master'
       - '*dev*'
+      - 'main'
+      - 'master'
     paths-ignore:
       - '*.md'
       - '.git*'

@@ -5,16 +5,14 @@ name: Backtest
 on:
   pull_request:
     branches:
-      - '*-dev'
-      - 'dev-*'
+      - '*dev*'
       - 'main'
       - 'master'
     paths-ignore:
       - '*.md'
   push:
     branches:
-      - '*-dev'
-      - 'dev-*'
+      - '*dev*'
       - 'main'
       - 'master'
     paths-ignore:
