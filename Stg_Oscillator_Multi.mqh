@@ -9,6 +9,7 @@ enum ENUM_STG_OSCILLATOR_MULTI_TYPE {
   STG_OSCILLATOR_MULTI_TYPE_ADXW,        // ADXW
   STG_OSCILLATOR_MULTI_TYPE_GATOR,       // Gator
   STG_OSCILLATOR_MULTI_TYPE_MACD,        // MACD
+  STG_OSCILLATOR_MULTI_TYPE_RVI,         // RVI: Relative Vigor Index
 };
 
 // User input params.
@@ -58,6 +59,10 @@ INPUT int Oscillator_Indi_MACD_Period_Slow = 34;                           // Pe
 INPUT int Oscillator_Indi_MACD_Period_Signal = 10;                         // Period Signal
 INPUT ENUM_APPLIED_PRICE Oscillator_Indi_MACD_Applied_Price = PRICE_OPEN;  // Applied Price
 INPUT int Oscillator_Indi_MACD_Shift = 0;                                  // Shift
+INPUT_GROUP("Oscillator strategy: RVI indicator params");
+INPUT unsigned int Oscillator_Indi_RVI_Period = 12;                                 // Averaging period
+INPUT int Oscillator_Indi_RVI_Shift = 0;                                            // Shift
+INPUT ENUM_IDATA_SOURCE_TYPE Oscillator_Multi_Indi_RVI_SourceType = IDATA_BUILTIN;  // Source type
 
 // Structs.
 
@@ -112,6 +117,9 @@ class Stg_Oscillator_Multi : public Strategy {
       case STG_OSCILLATOR_MULTI_TYPE_MACD:
         _result = dynamic_cast<Indi_MACD *>(_indi).GetParams().GetMaxModes();
         break;
+      case STG_OSCILLATOR_MULTI_TYPE_RVI:
+        _result = dynamic_cast<Indi_RVI *>(_indi).GetParams().GetMaxModes();
+        break;
       default:
         break;
     }
@@ -139,6 +147,10 @@ class Stg_Oscillator_Multi : public Strategy {
       case STG_OSCILLATOR_MULTI_TYPE_MACD:
         _result &= dynamic_cast<Indi_MACD *>(_indi).GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift) &&
                    dynamic_cast<Indi_MACD *>(_indi).GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift + 1);
+        break;
+      case STG_OSCILLATOR_MULTI_TYPE_RVI:
+        _result &= dynamic_cast<Indi_RVI *>(_indi).GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift) &&
+                   dynamic_cast<Indi_RVI *>(_indi).GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift + 1);
         break;
       default:
         break;
@@ -188,6 +200,14 @@ class Stg_Oscillator_Multi : public Strategy {
                                     ::Oscillator_Indi_MACD_Shift);
         _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
         SetIndicator(new Indi_MACD(_indi_params), ::Oscillator_Multi_Type);
+        break;
+      }
+      case STG_OSCILLATOR_MULTI_TYPE_RVI:  // RVI
+      {
+        IndiRVIParams _indi_params(::Oscillator_Indi_RVI_Period, ::Oscillator_Indi_RVI_Shift);
+        _indi_params.SetDataSourceType(::Oscillator_Multi_Indi_RVI_SourceType);
+        _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
+        SetIndicator(new Indi_RVI(_indi_params), ::Oscillator_Multi_Type);
         break;
       }
       case STG_OSCILLATOR_MULTI_TYPE_0_NONE:  // (None)
