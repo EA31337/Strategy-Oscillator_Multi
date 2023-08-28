@@ -14,10 +14,10 @@ enum ENUM_STG_OSCILLATOR_MULTI_TYPE {
 
 // User input params.
 INPUT_GROUP("Oscillator Multi strategy: main strategy params");
-INPUT ENUM_STG_OSCILLATOR_MULTI_TYPE Oscillator_Multi_Type = STG_OSCILLATOR_MULTI_TYPE_ADX;  // Oscillator type
+INPUT ENUM_STG_OSCILLATOR_MULTI_TYPE Oscillator_Multi_Type = STG_OSCILLATOR_MULTI_TYPE_RVI;  // Oscillator type
 INPUT_GROUP("Oscillator Multi strategy: strategy params");
 INPUT float Oscillator_Multi_LotSize = 0;                // Lot size
-INPUT int Oscillator_Multi_SignalOpenMethod = 0;         // Signal open method
+INPUT int Oscillator_Multi_SignalOpenMethod = 2;         // Signal open method
 INPUT float Oscillator_Multi_SignalOpenLevel = 10.0f;    // Signal open level
 INPUT int Oscillator_Multi_SignalOpenFilterMethod = 32;  // Signal open filter method
 INPUT int Oscillator_Multi_SignalOpenFilterTime = 3;     // Signal open filter time (0-31)
