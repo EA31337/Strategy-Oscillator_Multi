@@ -15,14 +15,14 @@ INPUT_GROUP("Oscillator Multi strategy: main strategy params");
 INPUT ENUM_STG_OSCILLATOR_MULTI_TYPE Oscillator_Multi_Type = STG_OSCILLATOR_MULTI_TYPE_ADX;  // Oscillator type
 INPUT_GROUP("Oscillator Multi strategy: strategy params");
 INPUT float Oscillator_Multi_LotSize = 0;                // Lot size
-INPUT int Oscillator_Multi_SignalOpenMethod = 6;         // Signal open method
-INPUT float Oscillator_Multi_SignalOpenLevel = 0;        // Signal open level
+INPUT int Oscillator_Multi_SignalOpenMethod = 0;         // Signal open method
+INPUT float Oscillator_Multi_SignalOpenLevel = 10.0f;    // Signal open level
 INPUT int Oscillator_Multi_SignalOpenFilterMethod = 32;  // Signal open filter method
 INPUT int Oscillator_Multi_SignalOpenFilterTime = 3;     // Signal open filter time (0-31)
 INPUT int Oscillator_Multi_SignalOpenBoostMethod = 0;    // Signal open boost method
 INPUT int Oscillator_Multi_SignalCloseMethod = 0;        // Signal close method
 INPUT int Oscillator_Multi_SignalCloseFilter = 32;       // Signal close filter (-127-127)
-INPUT float Oscillator_Multi_SignalCloseLevel = 0;       // Signal close level
+INPUT float Oscillator_Multi_SignalCloseLevel = 10.0f;   // Signal close level
 INPUT int Oscillator_Multi_PriceStopMethod = 0;          // Price limit method
 INPUT float Oscillator_Multi_PriceStopLevel = 2;         // Price limit level
 INPUT int Oscillator_Multi_TickFilterMethod = 32;        // Tick filter method (0-255)
@@ -91,13 +91,16 @@ class Stg_Oscillator_Multi : public Strategy {
    * Get's oscillator's max modes.
    */
   uint GetMaxModes(IndicatorBase *_indi) {
-    bool _result = true;
+    uint _result = 0;
     switch (Oscillator_Multi_Type) {
       case STG_OSCILLATOR_MULTI_TYPE_ADX:
-        _result &= dynamic_cast<Indi_ADX *>(_indi).GetParams().GetMaxModes();
+        _result = dynamic_cast<Indi_ADX *>(_indi).GetParams().GetMaxModes();
         break;
       case STG_OSCILLATOR_MULTI_TYPE_ADXW:
-        _result &= dynamic_cast<Indi_ADXW *>(_indi).GetParams().GetMaxModes();
+        _result = dynamic_cast<Indi_ADXW *>(_indi).GetParams().GetMaxModes();
+        break;
+      case STG_OSCILLATOR_MULTI_TYPE_GATOR:
+        _result = dynamic_cast<Indi_Gator *>(_indi).GetParams().GetMaxModes();
         break;
       default:
         break;
@@ -175,36 +178,41 @@ class Stg_Oscillator_Multi : public Strategy {
    */
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method, float _level = 0.0f, int _shift = 0) {
     IndicatorBase *_indi = GetIndicator(::Oscillator_Multi_Type);
-    uint _max_modes = GetMaxModes(_indi);
     // uint _ishift = _indi.GetShift();
     bool _result = Oscillator_Multi_Type != STG_OSCILLATOR_MULTI_TYPE_0_NONE && IsValidEntry(_indi, _shift);
     if (!_result) {
       // Returns false when indicator data is not valid.
       return false;
     }
+    float _value_avg[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+    uint _max_modes = GetMaxModes(_indi);
+    for (int _vshift = 0; _vshift < ArraySize(_value_avg); _vshift++) {
+      for (uint _imode = 0; _imode < _max_modes; _imode++) {
+        _value_avg[_vshift] += (float)_indi[_shift + _vshift][(int)_imode];
+      }
+      _value_avg[_vshift] /= (float)_max_modes;
+    }
     switch (_cmd) {
       case ORDER_TYPE_BUY:
         // Buy signal.
-        _result &= _indi.IsIncreasing(1, 0, _shift);
-        _result &= _indi.IsIncByPct(_level, 0, _shift, 2);
+        _result &= _value_avg[0] > _value_avg[1];
+        _result &= _value_avg[1] < _value_avg[2];
+        _result &= Math::ChangeInPct(_value_avg[1], _value_avg[0], true) > _level;
         if (_result && _method != 0) {
-          if (METHOD(_method, 0)) _result &= _indi.IsDecreasing(1, 0, _shift + 1);
-          if (METHOD(_method, 1)) _result &= _indi.IsIncreasing(4, 0, _shift + 3);
-          if (METHOD(_method, 2))
-            _result &= fmax4(_indi[_shift][0], _indi[_shift + 1][0], _indi[_shift + 2][0], _indi[_shift + 3][0]) ==
-                       _indi[_shift][0];
+          if (METHOD(_method, 0)) _result &= _value_avg[1] < _value_avg[3];
+          if (METHOD(_method, 1))
+            _result &= fmax4(_value_avg[0], _value_avg[1], _value_avg[2], _value_avg[3]) == _value_avg[0];
         }
         break;
       case ORDER_TYPE_SELL:
         // Sell signal.
-        _result &= _indi.IsDecreasing(1, 0, _shift);
-        _result &= _indi.IsDecByPct(_level, 0, _shift, 2);
+        _result &= _value_avg[0] < _value_avg[1];
+        _result &= _value_avg[1] > _value_avg[2];
+        _result &= Math::ChangeInPct(_value_avg[1], _value_avg[0], true) < _level;
         if (_result && _method != 0) {
-          if (METHOD(_method, 0)) _result &= _indi.IsIncreasing(1, 0, _shift + 1);
-          if (METHOD(_method, 1)) _result &= _indi.IsDecreasing(4, 0, _shift + 3);
-          if (METHOD(_method, 2))
-            _result &= fmin4(_indi[_shift][0], _indi[_shift + 1][0], _indi[_shift + 2][0], _indi[_shift + 3][0]) ==
-                       _indi[_shift][0];
+          if (METHOD(_method, 0)) _result &= _value_avg[1] > _value_avg[3];
+          if (METHOD(_method, 1))
+            _result &= fmin4(_value_avg[0], _value_avg[1], _value_avg[2], _value_avg[3]) == _value_avg[0];
         }
         break;
     }
