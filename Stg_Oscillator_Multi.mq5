@@ -1,6 +1,6 @@
 /**
  * @file
- * Implements Oscillator strategy.
+ * Implements Oscillator Multi strategy.
  */
 
 // Includes conditional compilation directives.
@@ -8,12 +8,13 @@
 
 // Includes EA31337 framework.
 #include <EA31337-classes/EA.mqh>
-#include <EA31337-classes/Indicators/Indi_AC.mqh>
-#include <EA31337-classes/Indicators/Indi_AD.mqh>
-#include <EA31337-classes/Indicators/Indi_RSI.mqh>
-#include <EA31337-classes/Indicators/Indi_Stochastic.mqh>
-#include <EA31337-classes/Indicators/Indi_WPR.mqh>
-// #include <EA31337-classes/Indicators/Oscillator/includes.h>
+#include <EA31337-classes/IndicatorData.mqh>
+#include <EA31337-classes/Indicators/Indi_ADX.mqh>
+#include <EA31337-classes/Indicators/Indi_ADXW.mqh>
+#include <EA31337-classes/Indicators/Indi_Gator.mqh>
+#include <EA31337-classes/Indicators/Indi_MACD.mqh>
+#include <EA31337-classes/Indicators/Indi_RVI.mqh>
+// #include <EA31337-classes/Indicators/Oscillator_Multi/includes.h>
 #include <EA31337-classes/Strategy.mqh>
 
 // Inputs.
@@ -23,13 +24,13 @@ input ENUM_LOG_LEVEL Log_Level = V_INFO;  // Log level.
 input bool Info_On_Chart = true;          // Display info on chart.
 
 // Includes strategy.
-#include "Stg_Oscillator.mqh"
+#include "Stg_Oscillator_Multi.mqh"
 
 // Defines.
-#define ea_name "Strategy Oscillator"
+#define ea_name "Strategy Oscillator_Multi"
 #define ea_version "2.000"
 #define ea_desc "Strategy based on EA31337 framework."
-#define ea_link "https://github.com/EA31337/Strategy-Oscillator"
+#define ea_link "https://github.com/EA31337/Strategy-Oscillator_Multi"
 #define ea_author "EA31337 Ltd"
 
 // Properties.
@@ -55,7 +56,7 @@ int OnInit() {
   bool _result = true;
   EAParams ea_params(__FILE__, Log_Level);
   ea = new EA(ea_params);
-  _result &= ea.StrategyAdd<Stg_Oscillator>(Active_Tfs);
+  _result &= ea.StrategyAdd<Stg_Oscillator_Multi>(Active_Tfs);
   return (_result ? INIT_SUCCEEDED : INIT_FAILED);
 }
 

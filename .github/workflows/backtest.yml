@@ -5,16 +5,14 @@ name: Backtest
 on:
   pull_request:
     branches:
-      - '*-dev'
-      - 'dev-*'
+      - '*dev*'
       - 'main'
       - 'master'
     paths-ignore:
       - '*.md'
   push:
     branches:
-      - '*-dev'
-      - 'dev-*'
+      - '*dev*'
       - 'main'
       - 'master'
     paths-ignore:
@@ -39,14 +37,14 @@ jobs:
           include: .
           init-platform: true
           mt-version: 5.0.0.2361
-          path: Stg_Oscillator.mq4
+          path: Stg_Oscillator_Multi.mq4
           verbose: true
       - name: Compile for MQL5
         uses: fx31337/mql-compile-action@master
         with:
           include: .
           mt-version: 5.0.0.2515
-          path: Stg_Oscillator.mq5
+          path: Stg_Oscillator_Multi.mq5
           verbose: true
       - name: List compiled files
         run: '(Get-ChildItem -Recurse -Path . -Include *.ex[45]).fullname'
@@ -77,7 +75,7 @@ jobs:
           OptFormatBrief: true
           OptFormatJson: true
           OptVerbose: true
-          TestExpert: "Stg_Oscillator"
+          TestExpert: "Stg_Oscillator_Multi"
           TestPeriod: M1
           TestReportName: Report-${{ matrix.year }}-${{ matrix.month }}
       - name: Upload results
