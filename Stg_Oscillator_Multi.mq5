@@ -13,6 +13,7 @@
 #include <EA31337-classes/Indicators/Indi_ADXW.mqh>
 #include <EA31337-classes/Indicators/Indi_Gator.mqh>
 #include <EA31337-classes/Indicators/Indi_MACD.mqh>
+#include <EA31337-classes/Indicators/Indi_OsMA.mqh>
 #include <EA31337-classes/Indicators/Indi_RVI.mqh>
 // #include <EA31337-classes/Indicators/Oscillator_Multi/includes.h>
 #include <EA31337-classes/Strategy.mqh>
