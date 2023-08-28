@@ -6,7 +6,7 @@
 
 /**
  * @file
- * Implements Oscillator_Multi strategy.
+ * Implements Oscillator Multi strategy.
  */
 
 // Includes the main code.

@@ -1,7 +1,9 @@
 /**
  * @file
- * Implements Oscillator_Multi strategy based on the Oscillator Multi indicator.
+ * Implements Oscillator Multi strategy based on the Oscillator Multi indicator.
  */
+
+// Enums.
 
 enum ENUM_STG_OSCILLATOR_MULTI_TYPE {
   STG_OSCILLATOR_MULTI_TYPE_0_NONE = 0,  // (None)
