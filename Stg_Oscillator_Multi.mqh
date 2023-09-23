@@ -46,32 +46,32 @@ INPUT int Oscillator_Multi_Indi_ADXW_Period = 16;                               
 INPUT ENUM_APPLIED_PRICE Oscillator_Multi_Indi_ADXW_AppliedPrice = PRICE_TYPICAL;    // Applied price
 INPUT int Oscillator_Multi_Indi_ADXW_Shift = 0;                                      // Shift
 INPUT ENUM_IDATA_SOURCE_TYPE Oscillator_Multi_Indi_ADXW_SourceType = IDATA_BUILTIN;  // Source type
-INPUT_GROUP("Oscillator strategy: Gator indicator params");
-INPUT int Oscillator_Indi_Gator_Period_Jaw = 30;                            // Jaw Period
-INPUT int Oscillator_Indi_Gator_Period_Teeth = 14;                          // Teeth Period
-INPUT int Oscillator_Indi_Gator_Period_Lips = 6;                            // Lips Period
-INPUT int Oscillator_Indi_Gator_Shift_Jaw = 2;                              // Jaw Shift
-INPUT int Oscillator_Indi_Gator_Shift_Teeth = 2;                            // Teeth Shift
-INPUT int Oscillator_Indi_Gator_Shift_Lips = 4;                             // Lips Shift
-INPUT ENUM_MA_METHOD Oscillator_Indi_Gator_MA_Method = (ENUM_MA_METHOD)1;   // MA Method
-INPUT ENUM_APPLIED_PRICE Oscillator_Indi_Gator_Applied_Price = PRICE_OPEN;  // Applied Price
-INPUT int Oscillator_Indi_Gator_Shift = 0;                                  // Shift
-INPUT_GROUP("Oscillator strategy: MACD indicator params");
-INPUT int Oscillator_Indi_MACD_Period_Fast = 6;                            // Period Fast
-INPUT int Oscillator_Indi_MACD_Period_Slow = 34;                           // Period Slow
-INPUT int Oscillator_Indi_MACD_Period_Signal = 10;                         // Period Signal
-INPUT ENUM_APPLIED_PRICE Oscillator_Indi_MACD_Applied_Price = PRICE_OPEN;  // Applied Price
-INPUT int Oscillator_Indi_MACD_Shift = 0;                                  // Shift
-INPUT_GROUP("Oscillator strategy: OsMA indicator params");
-INPUT int Oscillator_Indi_OsMA_Period_Fast = 14;                                     // Period fast
-INPUT int Oscillator_Indi_OsMA_Period_Slow = 30;                                     // Period slow
-INPUT int Oscillator_Indi_OsMA_Period_Signal = 12;                                   // Period signal
-INPUT ENUM_APPLIED_PRICE Oscillator_Indi_OsMA_Applied_Price = PRICE_OPEN;            // Applied price
-INPUT int Oscillator_Indi_OsMA_Shift = 0;                                            // Shift
+INPUT_GROUP("Oscillator Multi strategy: Gator indicator params");
+INPUT int Oscillator_Multi_Indi_Gator_Period_Jaw = 30;                            // Jaw Period
+INPUT int Oscillator_Multi_Indi_Gator_Period_Teeth = 14;                          // Teeth Period
+INPUT int Oscillator_Multi_Indi_Gator_Period_Lips = 6;                            // Lips Period
+INPUT int Oscillator_Multi_Indi_Gator_Shift_Jaw = 2;                              // Jaw Shift
+INPUT int Oscillator_Multi_Indi_Gator_Shift_Teeth = 2;                            // Teeth Shift
+INPUT int Oscillator_Multi_Indi_Gator_Shift_Lips = 4;                             // Lips Shift
+INPUT ENUM_MA_METHOD Oscillator_Multi_Indi_Gator_MA_Method = (ENUM_MA_METHOD)1;   // MA Method
+INPUT ENUM_APPLIED_PRICE Oscillator_Multi_Indi_Gator_Applied_Price = PRICE_OPEN;  // Applied Price
+INPUT int Oscillator_Multi_Indi_Gator_Shift = 0;                                  // Shift
+INPUT_GROUP("Oscillator Multi strategy: MACD indicator params");
+INPUT int Oscillator_Multi_Indi_MACD_Period_Fast = 6;                            // Period Fast
+INPUT int Oscillator_Multi_Indi_MACD_Period_Slow = 34;                           // Period Slow
+INPUT int Oscillator_Multi_Indi_MACD_Period_Signal = 10;                         // Period Signal
+INPUT ENUM_APPLIED_PRICE Oscillator_Multi_Indi_MACD_Applied_Price = PRICE_OPEN;  // Applied Price
+INPUT int Oscillator_Multi_Indi_MACD_Shift = 0;                                  // Shift
+INPUT_GROUP("Oscillator Multi strategy: OsMA indicator params");
+INPUT int Oscillator_Multi_Indi_OsMA_Period_Fast = 14;                               // Period fast
+INPUT int Oscillator_Multi_Indi_OsMA_Period_Slow = 30;                               // Period slow
+INPUT int Oscillator_Multi_Indi_OsMA_Period_Signal = 12;                             // Period signal
+INPUT ENUM_APPLIED_PRICE Oscillator_Multi_Indi_OsMA_Applied_Price = PRICE_OPEN;      // Applied price
+INPUT int Oscillator_Multi_Indi_OsMA_Shift = 0;                                      // Shift
 INPUT ENUM_IDATA_SOURCE_TYPE Oscillator_Multi_Indi_OsMA_SourceType = IDATA_BUILTIN;  // Source type
-INPUT_GROUP("Oscillator strategy: RVI indicator params");
-INPUT unsigned int Oscillator_Indi_RVI_Period = 12;                                 // Averaging period
-INPUT int Oscillator_Indi_RVI_Shift = 0;                                            // Shift
+INPUT_GROUP("Oscillator Multi strategy: RVI indicator params");
+INPUT unsigned int Oscillator_Multi_Indi_RVI_Period = 12;                           // Averaging period
+INPUT int Oscillator_Multi_Indi_RVI_Shift = 0;                                      // Shift
 INPUT ENUM_IDATA_SOURCE_TYPE Oscillator_Multi_Indi_RVI_SourceType = IDATA_BUILTIN;  // Source type
 
 // Structs.
@@ -85,11 +85,11 @@ struct Stg_Oscillator_Multi_Params_Defaults : StgParams {
                   ::Oscillator_Multi_SignalCloseLevel, ::Oscillator_Multi_PriceStopMethod,
                   ::Oscillator_Multi_PriceStopLevel, ::Oscillator_Multi_TickFilterMethod, ::Oscillator_Multi_MaxSpread,
                   ::Oscillator_Multi_Shift) {
-    Set(STRAT_PARAM_LS, Oscillator_Multi_LotSize);
-    Set(STRAT_PARAM_OCL, Oscillator_Multi_OrderCloseLoss);
-    Set(STRAT_PARAM_OCP, Oscillator_Multi_OrderCloseProfit);
-    Set(STRAT_PARAM_OCT, Oscillator_Multi_OrderCloseTime);
-    Set(STRAT_PARAM_SOFT, Oscillator_Multi_SignalOpenFilterTime);
+    Set(STRAT_PARAM_LS, ::Oscillator_Multi_LotSize);
+    Set(STRAT_PARAM_OCL, ::Oscillator_Multi_OrderCloseLoss);
+    Set(STRAT_PARAM_OCP, ::Oscillator_Multi_OrderCloseProfit);
+    Set(STRAT_PARAM_OCT, ::Oscillator_Multi_OrderCloseTime);
+    Set(STRAT_PARAM_SOFT, ::Oscillator_Multi_SignalOpenFilterTime);
   }
 };
 
@@ -105,7 +105,7 @@ class Stg_Oscillator_Multi : public Strategy {
     // Initialize Strategy instance.
     ChartParams _cparams(_tf, _Symbol);
     TradeParams _tparams;
-    Strategy *_strat = new Stg_Oscillator_Multi(_stg_params, _tparams, _cparams, "Oscillator_Multi");
+    Strategy *_strat = new Stg_Oscillator_Multi(_stg_params, _tparams, _cparams, "Oscillator Multi");
     return _strat;
   }
 
@@ -114,7 +114,7 @@ class Stg_Oscillator_Multi : public Strategy {
    */
   uint GetMaxModes(IndicatorBase *_indi) {
     uint _result = 0;
-    switch (Oscillator_Multi_Type) {
+    switch (::Oscillator_Multi_Type) {
       case STG_OSCILLATOR_MULTI_TYPE_ADX:
         _result = dynamic_cast<Indi_ADX *>(_indi).GetParams().GetMaxModes();
         break;
@@ -201,29 +201,30 @@ class Stg_Oscillator_Multi : public Strategy {
       }
       case STG_OSCILLATOR_MULTI_TYPE_GATOR:  // Gator
       {
-        IndiGatorParams _indi_params(::Oscillator_Indi_Gator_Period_Jaw, ::Oscillator_Indi_Gator_Shift_Jaw,
-                                     ::Oscillator_Indi_Gator_Period_Teeth, ::Oscillator_Indi_Gator_Shift_Teeth,
-                                     ::Oscillator_Indi_Gator_Period_Lips, ::Oscillator_Indi_Gator_Shift_Lips,
-                                     ::Oscillator_Indi_Gator_MA_Method, ::Oscillator_Indi_Gator_Applied_Price,
-                                     ::Oscillator_Indi_Gator_Shift);
+        IndiGatorParams _indi_params(::Oscillator_Multi_Indi_Gator_Period_Jaw, ::Oscillator_Multi_Indi_Gator_Shift_Jaw,
+                                     ::Oscillator_Multi_Indi_Gator_Period_Teeth,
+                                     ::Oscillator_Multi_Indi_Gator_Shift_Teeth,
+                                     ::Oscillator_Multi_Indi_Gator_Period_Lips,
+                                     ::Oscillator_Multi_Indi_Gator_Shift_Lips, ::Oscillator_Multi_Indi_Gator_MA_Method,
+                                     ::Oscillator_Multi_Indi_Gator_Applied_Price, ::Oscillator_Multi_Indi_Gator_Shift);
         _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
         SetIndicator(new Indi_Gator(_indi_params), ::Oscillator_Multi_Type);
         break;
       }
       case STG_OSCILLATOR_MULTI_TYPE_MACD:  // MACD
       {
-        IndiMACDParams _indi_params(::Oscillator_Indi_MACD_Period_Fast, ::Oscillator_Indi_MACD_Period_Slow,
-                                    ::Oscillator_Indi_MACD_Period_Signal, ::Oscillator_Indi_MACD_Applied_Price,
-                                    ::Oscillator_Indi_MACD_Shift);
+        IndiMACDParams _indi_params(::Oscillator_Multi_Indi_MACD_Period_Fast, ::Oscillator_Multi_Indi_MACD_Period_Slow,
+                                    ::Oscillator_Multi_Indi_MACD_Period_Signal,
+                                    ::Oscillator_Multi_Indi_MACD_Applied_Price, ::Oscillator_Multi_Indi_MACD_Shift);
         _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
         SetIndicator(new Indi_MACD(_indi_params), ::Oscillator_Multi_Type);
         break;
       }
       case STG_OSCILLATOR_MULTI_TYPE_OSMA:  // OsMA
       {
-        IndiOsMAParams _indi_params(::Oscillator_Indi_OsMA_Period_Fast, ::Oscillator_Indi_OsMA_Period_Slow,
-                                    ::Oscillator_Indi_OsMA_Period_Signal, ::Oscillator_Indi_OsMA_Applied_Price,
-                                    ::Oscillator_Indi_OsMA_Shift);
+        IndiOsMAParams _indi_params(::Oscillator_Multi_Indi_OsMA_Period_Fast, ::Oscillator_Multi_Indi_OsMA_Period_Slow,
+                                    ::Oscillator_Multi_Indi_OsMA_Period_Signal,
+                                    ::Oscillator_Multi_Indi_OsMA_Applied_Price, ::Oscillator_Multi_Indi_OsMA_Shift);
         _indi_params.SetDataSourceType(::Oscillator_Multi_Indi_OsMA_SourceType);
         _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
         SetIndicator(new Indi_OsMA(_indi_params), ::Oscillator_Multi_Type);
@@ -231,7 +232,7 @@ class Stg_Oscillator_Multi : public Strategy {
       }
       case STG_OSCILLATOR_MULTI_TYPE_RVI:  // RVI
       {
-        IndiRVIParams _indi_params(::Oscillator_Indi_RVI_Period, ::Oscillator_Indi_RVI_Shift);
+        IndiRVIParams _indi_params(::Oscillator_Multi_Indi_RVI_Period, ::Oscillator_Multi_Indi_RVI_Shift);
         _indi_params.SetDataSourceType(::Oscillator_Multi_Indi_RVI_SourceType);
         _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
         SetIndicator(new Indi_RVI(_indi_params), ::Oscillator_Multi_Type);
