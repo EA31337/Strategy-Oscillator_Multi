@@ -104,23 +104,23 @@ class Stg_Oscillator_Multi : public Strategy {
   /**
    * Get's oscillator's max modes.
    */
-  uint GetMaxModes(IndicatorBase *_indi) {
+  uint GetMaxModes(IndicatorData *_indi) {
     uint _result = 0;
     switch (Oscillator_Multi_Type) {
       case STG_OSCILLATOR_MULTI_TYPE_ADX:
-        _result = dynamic_cast<Indi_ADX *>(_indi).GetParams().GetMaxModes();
+        _result = dynamic_cast<Indi_ADX *>(_indi).Get<int>(STRUCT_ENUM(IndicatorDataParams, IDATA_PARAM_MAX_MODES));
         break;
       case STG_OSCILLATOR_MULTI_TYPE_ADXW:
-        _result = dynamic_cast<Indi_ADXW *>(_indi).GetParams().GetMaxModes();
+        _result = dynamic_cast<Indi_ADXW *>(_indi).Get<int>(STRUCT_ENUM(IndicatorDataParams, IDATA_PARAM_MAX_MODES));
         break;
       case STG_OSCILLATOR_MULTI_TYPE_GATOR:
-        _result = dynamic_cast<Indi_Gator *>(_indi).GetParams().GetMaxModes();
+        _result = dynamic_cast<Indi_Gator *>(_indi).Get<int>(STRUCT_ENUM(IndicatorDataParams, IDATA_PARAM_MAX_MODES));
         break;
       case STG_OSCILLATOR_MULTI_TYPE_MACD:
-        _result = dynamic_cast<Indi_MACD *>(_indi).GetParams().GetMaxModes();
+        _result = dynamic_cast<Indi_MACD *>(_indi).Get<int>(STRUCT_ENUM(IndicatorDataParams, IDATA_PARAM_MAX_MODES));
         break;
       case STG_OSCILLATOR_MULTI_TYPE_RVI:
-        _result = dynamic_cast<Indi_RVI *>(_indi).GetParams().GetMaxModes();
+        _result = dynamic_cast<Indi_RVI *>(_indi).Get<int>(STRUCT_ENUM(IndicatorDataParams, IDATA_PARAM_MAX_MODES));
         break;
       default:
         break;
@@ -131,7 +131,7 @@ class Stg_Oscillator_Multi : public Strategy {
   /**
    * Validate oscillator's entry.
    */
-  bool IsValidEntry(IndicatorBase *_indi, int _shift = 0) {
+  bool IsValidEntry(IndicatorData *_indi, int _shift = 0) {
     bool _result = true;
     switch (Oscillator_Multi_Type) {
       case STG_OSCILLATOR_MULTI_TYPE_ADX:
@@ -170,7 +170,6 @@ class Stg_Oscillator_Multi : public Strategy {
       {
         IndiADXParams _adx_params(::Oscillator_Multi_Indi_ADX_Period, ::Oscillator_Multi_Indi_ADX_AppliedPrice,
                                   ::Oscillator_Multi_Indi_ADX_Shift);
-        _adx_params.SetDataSourceType(::Oscillator_Multi_Indi_ADX_SourceType);
         _adx_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
         SetIndicator(new Indi_ADX(_adx_params), ::Oscillator_Multi_Type);
         break;
@@ -179,7 +178,6 @@ class Stg_Oscillator_Multi : public Strategy {
       {
         IndiADXWParams _adxw_params(::Oscillator_Multi_Indi_ADXW_Period, ::Oscillator_Multi_Indi_ADXW_AppliedPrice,
                                     ::Oscillator_Multi_Indi_ADXW_Shift);
-        _adxw_params.SetDataSourceType(::Oscillator_Multi_Indi_ADXW_SourceType);
         _adxw_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
         SetIndicator(new Indi_ADXW(_adxw_params), ::Oscillator_Multi_Type);
         break;
@@ -192,7 +190,7 @@ class Stg_Oscillator_Multi : public Strategy {
                                      ::Oscillator_Indi_Gator_MA_Method, ::Oscillator_Indi_Gator_Applied_Price,
                                      ::Oscillator_Indi_Gator_Shift);
         _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
-        SetIndicator(new Indi_Gator(_indi_params), ::Oscillator_Multi_Type);
+        SetIndicator(new Indi_Gator(_indi_params, ::Oscillator_Multi_Indi_ADX_SourceType), ::Oscillator_Multi_Type);
         break;
       }
       case STG_OSCILLATOR_MULTI_TYPE_MACD:  // MACD
@@ -201,15 +199,14 @@ class Stg_Oscillator_Multi : public Strategy {
                                     ::Oscillator_Indi_MACD_Period_Signal, ::Oscillator_Indi_MACD_Applied_Price,
                                     ::Oscillator_Indi_MACD_Shift);
         _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
-        SetIndicator(new Indi_MACD(_indi_params), ::Oscillator_Multi_Type);
+        SetIndicator(new Indi_MACD(_indi_params, ::Oscillator_Multi_Indi_ADXW_SourceType), ::Oscillator_Multi_Type);
         break;
       }
       case STG_OSCILLATOR_MULTI_TYPE_RVI:  // RVI
       {
         IndiRVIParams _indi_params(::Oscillator_Indi_RVI_Period, ::Oscillator_Indi_RVI_Shift);
-        _indi_params.SetDataSourceType(::Oscillator_Multi_Indi_RVI_SourceType);
         _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
-        SetIndicator(new Indi_RVI(_indi_params), ::Oscillator_Multi_Type);
+        SetIndicator(new Indi_RVI(_indi_params, ::Oscillator_Multi_Indi_RVI_SourceType), ::Oscillator_Multi_Type);
         break;
       }
       case STG_OSCILLATOR_MULTI_TYPE_0_NONE:  // (None)
@@ -222,7 +219,7 @@ class Stg_Oscillator_Multi : public Strategy {
    * Check strategy's opening signal.
    */
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method, float _level = 0.0f, int _shift = 0) {
-    IndicatorBase *_indi = GetIndicator(::Oscillator_Multi_Type);
+    IndicatorData *_indi = GetIndicator(::Oscillator_Multi_Type);
     // uint _ishift = _indi.GetShift();
     bool _result = Oscillator_Multi_Type != STG_OSCILLATOR_MULTI_TYPE_0_NONE && IsValidEntry(_indi, _shift);
     if (!_result) {
